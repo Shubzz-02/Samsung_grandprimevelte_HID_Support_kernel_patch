@@ -2,8 +2,6 @@ Convert your Android device into USB keyboard/mouse, control your PC from your A
 
 While compiling Kernel for this device,use this command
 
-'''
-
+```
 patch -p1 < SM-G531F_HID_Support_Kernel.patch
-
-'''
+```
