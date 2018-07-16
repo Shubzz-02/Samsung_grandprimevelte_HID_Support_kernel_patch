@@ -1,2 +1,9 @@
-# Samsung_Galaxy_SM-G531F_HID_Support_kernel.patch
-Patch for Samsung Galaxy Grand Prime (SM-G531F) HID support kernel Patch
+Convert your Android device into USB keyboard/mouse, control your PC from your Android device remotely, including BIOS/bootloader. Use it as Rubber Ducky.
+
+While compiling Kernel for this device,use this command
+
+'''
+
+patch -p1 < SM-G531F_HID_Support_Kernel.patch
+
+'''
