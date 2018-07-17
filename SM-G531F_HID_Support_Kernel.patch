@@ -15,10 +15,10 @@ Subject: [PATCH 1/2] changed files
  create mode 100644 f_hid_android_keyboard.c
  create mode 100644 f_hid_android_mouse.c
 
-diff --git a/Makefile b/Makefile
+diff --git a/drivers/usb/gadget/Makefile b/drivers/usb/gadget/Makefile
 index 10c055a..1d8a13e 100644
---- a/Makefile
-+++ b/Makefile
+--- a/drivers/usb/gadget/Makefile
++++ b/drivers/usb/gadget/Makefile
 @@ -84,7 +84,7 @@ g_nokia-y			:= nokia.o
  g_webcam-y			:= webcam.o
  g_ncm-y				:= ncm.o
@@ -28,10 +28,10 @@ index 10c055a..1d8a13e 100644
  g_tcm_usb_gadget-y		:= tcm_usb_gadget.o
  
  obj-$(CONFIG_USB_ZERO)		+= g_zero.o
-diff --git a/android.c b/android.c
+diff --git a/drivers/usb/gadget/android.c b/drivers/usb/gadget/android.c
 index 4397087..6d6fd66 100644
---- a/android.c
-+++ b/android.c
+--- a/drivers/usb/gadget/android.c
++++ b/drivers/usb/gadget/android.c
 @@ -37,6 +37,9 @@
  #include "pxa910_u_serial.c"
  #include "pxa910_f_diag.c"
@@ -104,10 +104,10 @@ index 4397087..6d6fd66 100644
  	mutex_unlock(&dev->mutex);
  
  	return size;
-diff --git a/f_hid.c b/f_hid.c
+diff --git a/drivers/usb/gadget/f_hid.c b/drivers/usb/gadget/f_hid.c
 index a95290a..6afb535 100644
---- a/f_hid.c
-+++ b/f_hid.c
+--- a/drivers/usb/gadget/f_hid.c
++++ b/drivers/usb/gadget/f_hid.c
 @@ -17,8 +17,10 @@
  #include <linux/poll.h>
  #include <linux/uaccess.h>
@@ -317,11 +317,11 @@ index a95290a..6afb535 100644
  {
  	int status;
  	dev_t dev;
-diff --git a/f_hid.h b/f_hid.h
+diff --git a/drivers/usb/gadget/f_hid.h b/drivers/usb/gadget/f_hid.h
 new file mode 100644
 index 0000000..e784794
 --- /dev/null
-+++ b/f_hid.h
++++ b/drivers/usb/gadget/f_hid.h
 @@ -0,0 +1,16 @@
 +#ifndef _GADGET_F_HID_H
 +#define _GADGET_F_HID_H
@@ -340,11 +340,11 @@ index 0000000..e784794
 +
 +#endif
 \ No newline at end of file
-diff --git a/f_hid_android_keyboard.c b/f_hid_android_keyboard.c
+diff --git a/drivers/usb/gadget/f_hid_android_keyboard.c b/drivers/usb/gadget/f_hid_android_keyboard.c
 new file mode 100644
 index 0000000..fc61d2f
 --- /dev/null
-+++ b/f_hid_android_keyboard.c
++++ b/drivers/usb/gadget/f_hid_android_keyboard.c
 @@ -0,0 +1,44 @@
 +#include <linux/platform_device.h>
 +#include <linux/usb/g_hid.h>
@@ -391,11 +391,11 @@ index 0000000..fc61d2f
 +	}
 +};
 \ No newline at end of file
-diff --git a/f_hid_android_mouse.c b/f_hid_android_mouse.c
+diff --git a/drivers/usb/gadget/f_hid_android_mouse.c b/drivers/usb/gadget/f_hid_android_mouse.c
 new file mode 100644
 index 0000000..a5cb524
 --- /dev/null
-+++ b/f_hid_android_mouse.c
++++ b/drivers/usb/gadget/f_hid_android_mouse.c
 @@ -0,0 +1,39 @@
 +#include <linux/platform_device.h>
 +#include <linux/usb/g_hid.h>
