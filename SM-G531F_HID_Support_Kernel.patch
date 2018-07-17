@@ -1,7 +1,7 @@
 From 0743b825488fab5bc1d5d5ea4d666472981322e7 Mon Sep 17 00:00:00 2001
 From: N0p$eD <19619948+Shubzz-02@users.noreply.github.com>
 Date: Mon, 16 Jul 2018 20:17:38 +0530
-Subject: [PATCH] changed files
+Subject: [PATCH 1/2] changed files
 
 ---
  Makefile                 |   2 +-
@@ -15,10 +15,10 @@ Subject: [PATCH] changed files
  create mode 100644 f_hid_android_keyboard.c
  create mode 100644 f_hid_android_mouse.c
 
-diff --git a/drivers/usb/gadget/Makefile b/drivers/usb/gadget/Makefile
+diff --git a/Makefile b/Makefile
 index 10c055a..1d8a13e 100644
---- a/drivers/usb/gadget/Makefile
-+++ b/drivers/usb/gadget/Makefile
+--- a/Makefile
++++ b/Makefile
 @@ -84,7 +84,7 @@ g_nokia-y			:= nokia.o
  g_webcam-y			:= webcam.o
  g_ncm-y				:= ncm.o
@@ -28,10 +28,10 @@ index 10c055a..1d8a13e 100644
  g_tcm_usb_gadget-y		:= tcm_usb_gadget.o
  
  obj-$(CONFIG_USB_ZERO)		+= g_zero.o
-diff --git a/drivers/usb/gadget/android.c b/drivers/usb/gadget/android.c
+diff --git a/android.c b/android.c
 index 4397087..6d6fd66 100644
---- a/drivers/usb/gadget/android.c
-+++ b/drivers/usb/gadget/android.c
+--- a/android.c
++++ b/android.c
 @@ -37,6 +37,9 @@
  #include "pxa910_u_serial.c"
  #include "pxa910_f_diag.c"
@@ -104,10 +104,10 @@ index 4397087..6d6fd66 100644
  	mutex_unlock(&dev->mutex);
  
  	return size;
-diff --git a/drivers/usb/gadget/f_hid.c b/drivers/usb/gadget/f_hid.c
+diff --git a/f_hid.c b/f_hid.c
 index a95290a..6afb535 100644
---- a/drivers/usb/gadget/f_hid.c
-+++ b/drivers/usb/gadget/f_hid.c
+--- a/f_hid.c
++++ b/f_hid.c
 @@ -17,8 +17,10 @@
  #include <linux/poll.h>
  #include <linux/uaccess.h>
@@ -317,11 +317,11 @@ index a95290a..6afb535 100644
  {
  	int status;
  	dev_t dev;
-diff --git a/drivers/usb/gadget/f_hid.h b/drivers/usb/gadget/f_hid.h
+diff --git a/f_hid.h b/f_hid.h
 new file mode 100644
 index 0000000..e784794
 --- /dev/null
-+++ b/drivers/usb/gadget/f_hid.h
++++ b/f_hid.h
 @@ -0,0 +1,16 @@
 +#ifndef _GADGET_F_HID_H
 +#define _GADGET_F_HID_H
@@ -340,11 +340,11 @@ index 0000000..e784794
 +
 +#endif
 \ No newline at end of file
-diff --git a/drivers/usb/gadget/f_hid_android_keyboard.c b/drivers/usb/gadget/f_hid_android_keyboard.c
+diff --git a/f_hid_android_keyboard.c b/f_hid_android_keyboard.c
 new file mode 100644
 index 0000000..fc61d2f
 --- /dev/null
-+++ b/drivers/usb/gadget/f_hid_android_keyboard.c
++++ b/f_hid_android_keyboard.c
 @@ -0,0 +1,44 @@
 +#include <linux/platform_device.h>
 +#include <linux/usb/g_hid.h>
@@ -391,11 +391,11 @@ index 0000000..fc61d2f
 +	}
 +};
 \ No newline at end of file
-diff --git a/drivers/usb/f_hid_android_mouse.c b/drivers/usb/f_hid_android_mouse.c
+diff --git a/f_hid_android_mouse.c b/f_hid_android_mouse.c
 new file mode 100644
 index 0000000..a5cb524
 --- /dev/null
-+++ b/drivers/usb/f_hid_android_mouse.c
++++ b/f_hid_android_mouse.c
 @@ -0,0 +1,39 @@
 +#include <linux/platform_device.h>
 +#include <linux/usb/g_hid.h>
@@ -437,3 +437,421 @@ index 0000000..a5cb524
 +	}
 +};
 \ No newline at end of file
+
+From 0b3aa8aaa3dc211c88ce9e3c55ad622cdd1dd342 Mon Sep 17 00:00:00 2001
+From: Subhash Rawat <19619948+Shubzz-02@users.noreply.github.com>
+Date: Tue, 17 Jul 2018 16:20:01 -0400
+Subject: [PATCH 2/2] updated
+
+---
+ android.c                | 71 +++++++++++++++++++-------------------
+ f_hid.c                  |  7 ++--
+ f_hid.h                  | 32 +++++++++---------
+ f_hid_android_keyboard.c | 88 ++++++++++++++++++++++++------------------------
+ f_hid_android_mouse.c    | 79 ++++++++++++++++++++++---------------------
+ 5 files changed, 136 insertions(+), 141 deletions(-)
+
+diff --git a/android.c b/android.c
+index 6d6fd66..d935a8f 100644
+--- a/android.c
++++ b/android.c
+@@ -37,9 +37,6 @@
+ #include "pxa910_u_serial.c"
+ #include "pxa910_f_diag.c"
+ #include "pxa910_f_modem.c"
+-#include "f_hid.h"
+-#include "f_hid_android_keyboard.c"
+-#include "f_hid_android_mouse.c"
+ #include "f_fs.c"
+ #include "f_audio_source.c"
+ #include "f_mass_storage.c"
+@@ -49,6 +46,9 @@
+ #include "f_mtp.c"
+ #endif
+ #include "f_accessory.c"
++#include "f_hid.h"
++#include "f_hid_android_keyboard.c"
++#include "f_hid_android_mouse.c"
+ #define USB_ETH_RNDIS y
+ #define USB_FRNDIS_INCLUDED y
+ #include "f_rndis.c"
+@@ -1335,50 +1335,49 @@ static struct device_attribute *audio_source_function_attributes[] = {
+ 	NULL
+ };
+ 
+-static struct android_usb_function audio_source_function = {
+-	.name		= "audio_source",
+-	.init		= audio_source_function_init,
+-	.cleanup	= audio_source_function_cleanup,
+-	.bind_config	= audio_source_function_bind_config,
+-	.unbind_config	= audio_source_function_unbind_config,
+-	.attributes	= audio_source_function_attributes,
+-};
+-
+ static int hid_function_init(struct android_usb_function *f, struct usb_composite_dev *cdev)
+ {
+-	return ghid_setup(cdev->gadget, 2);
++       return ghid_setup(cdev->gadget, 2);
+ }
+ 
+ static void hid_function_cleanup(struct android_usb_function *f)
+ {
+-	ghid_cleanup();
++       ghid_cleanup();
+ }
+ 
+ static int hid_function_bind_config(struct android_usb_function *f, struct usb_configuration *c)
+ {
+-	int ret;
+-	printk(KERN_INFO "hid keyboard\n");
+-	ret = hidg_bind_config(c, &ghid_device_android_keyboard, 0);
+-	if (ret) {
+-		pr_info("%s: hid_function_bind_config keyboard failed: %d\n", __func__, ret);
+-		return ret;
+-	}
+-	printk(KERN_INFO "hid mouse\n");
+-	ret = hidg_bind_config(c, &ghid_device_android_mouse, 1);
+-	if (ret) {
+-		pr_info("%s: hid_function_bind_config mouse failed: %d\n", __func__, ret);
+-		return ret;
+-	}
+-	return 0;
++       int ret;
++       printk(KERN_INFO "hid keyboard\n");
++       ret = hidg_bind_config(c, &ghid_device_android_keyboard, 0);
++       if (ret) {
++               pr_info("%s: hid_function_bind_config keyboard failed: %d\n", __func__, ret);
++               return ret;
++       }
++       printk(KERN_INFO "hid mouse\n");
++       ret = hidg_bind_config(c, &ghid_device_android_mouse, 1);
++       if (ret) {
++               pr_info("%s: hid_function_bind_config mouse failed: %d\n", __func__, ret);
++               return ret;
++       }
++       return 0;
+ }
+ 
+ static struct android_usb_function hid_function = {
+-	.name		= "hid",
+-	.init		= hid_function_init,
+-	.cleanup	= hid_function_cleanup,
+-	.bind_config	= hid_function_bind_config,
++       .name           = "hid",
++       .init           = hid_function_init,
++       .cleanup        = hid_function_cleanup,
++       .bind_config    = hid_function_bind_config,
+ };
+ 
++static struct android_usb_function audio_source_function = {
++	.name		= "audio_source",
++	.init		= audio_source_function_init,
++	.cleanup	= audio_source_function_cleanup,
++	.bind_config	= audio_source_function_bind_config,
++	.unbind_config	= audio_source_function_unbind_config,
++	.attributes	= audio_source_function_attributes,
++};
+ 
+ static struct android_usb_function *supported_functions[] = {
+ 	&adb_function,
+@@ -1391,8 +1390,8 @@ static struct android_usb_function *supported_functions[] = {
+ 	&rndis_function,
+ 	&mass_storage_function,
+ 	&accessory_function,
+-	&audio_source_function,
+ 	&hid_function,
++	&audio_source_function,
+ #ifdef CONFIG_USB_GADGET_CHARGE_ONLY
+ 	&charge_only_function,
+ #endif /* CONFIG_USB_GADGET_CHARGE_ONLY */
+@@ -1562,6 +1561,8 @@ functions_store(struct device *pdev, struct device_attribute *attr,
+ 		mutex_unlock(&dev->mutex);
+ 		return -EBUSY;
+ 	}
++	/* HID driver always enabled, it's the whole point of this kernel patch */
++	android_enable_function(dev, "hid");
+ 
+ 	INIT_LIST_HEAD(&dev->enabled_functions);
+ 
+@@ -1618,10 +1619,6 @@ functions_store(struct device *pdev, struct device_attribute *attr,
+ #endif
+ 	}
+ 
+-	
+-	/* HID driver always enabled, it's the whole point of this kernel patch */
+-	android_enable_function(dev, "hid");
+-
+ 	mutex_unlock(&dev->mutex);
+ 
+ 	return size;
+diff --git a/f_hid.c b/f_hid.c
+index 6afb535..8e0b64d 100644
+--- a/f_hid.c
++++ b/f_hid.c
+@@ -101,7 +101,6 @@ static int hacky_device_list_check(struct f_hidg *hidg)
+ 	return 1;
+ }
+ 
+-
+ static inline struct f_hidg *func_to_hidg(struct usb_function *f)
+ {
+ 	return container_of(f, struct f_hidg, func);
+@@ -218,7 +217,7 @@ static ssize_t f_hidg_read(struct file *file, char __user *buffer,
+ 	if (!access_ok(VERIFY_WRITE, buffer, count))
+ 		return -EFAULT;
+ 
+-		if (hacky_device_list_check(hidg)) {
++	if (hacky_device_list_check(hidg)) {
+ 		pr_err("%s: trying to read from device %p that was destroyed\n", __func__, hidg);
+ 		return -EIO;
+ 	}
+@@ -356,6 +355,7 @@ static unsigned int f_hidg_poll(struct file *file, poll_table *wait)
+ {
+ 	struct f_hidg	*hidg  = file->private_data;
+ 	unsigned int	ret = 0;
++
+ 	if (hacky_device_list_check(hidg)) {
+ 		pr_err("%s: trying to poll device %p that was destroyed\n", __func__, hidg);
+ 		return -EIO;
+@@ -368,7 +368,6 @@ static unsigned int f_hidg_poll(struct file *file, poll_table *wait)
+ 		return -EIO;
+ 	}
+ 
+-
+ 	poll_wait(file, &hidg->write_queue, wait);
+ 
+ 	if (WRITE_COND)
+@@ -639,7 +638,6 @@ static int hidg_bind(struct usb_configuration *c, struct usb_function *f)
+ 	dev_t			dev;
+ 
+ 	pr_info("%s: creating device %p\n", __func__, hidg);
+-	
+ 
+ 	/* allocate instance-specific interface IDs, and patch descriptors */
+ 	status = usb_interface_id(c, f);
+@@ -737,7 +735,6 @@ static void hidg_unbind(struct usb_configuration *c, struct usb_function *f)
+ 
+ 	/* disable/free request and end point */
+ 	usb_ep_disable(hidg->in_ep);
+-
+ 	/* TODO: calling this function crash kernel,
+ 	   not calling this funct ion crash kernel inside f_hidg_write */
+ 	/* usb_ep_dequeue(hidg->in_ep, hidg->req); */
+diff --git a/f_hid.h b/f_hid.h
+index e784794..ad3527a 100644
+--- a/f_hid.h
++++ b/f_hid.h
+@@ -1,16 +1,16 @@
+-#ifndef _GADGET_F_HID_H
+-#define _GADGET_F_HID_H
+-
+-#include <linux/hid.h>
+-#include <linux/usb/composite.h>
+-#include <linux/usb/gadget.h>
+-#include <linux/usb/g_hid.h>
+-
+-int hidg_bind_config(struct usb_configuration *c,
+-			    struct hidg_func_descriptor *fdesc, int index);
+-
+-int ghid_setup(struct usb_gadget *g, int count);
+-
+-void ghid_cleanup(void);
+-
+-#endif
+\ No newline at end of file
++#ifndef _GADGET_F_HID_H
++#define _GADGET_F_HID_H
++
++#include <linux/hid.h>
++#include <linux/usb/composite.h>
++#include <linux/usb/gadget.h>
++#include <linux/usb/g_hid.h>
++
++int hidg_bind_config(struct usb_configuration *c,
++			    struct hidg_func_descriptor *fdesc, int index);
++
++int ghid_setup(struct usb_gadget *g, int count);
++
++void ghid_cleanup(void);
++
++#endif
+diff --git a/f_hid_android_keyboard.c b/f_hid_android_keyboard.c
+index fc61d2f..1824bdd 100644
+--- a/f_hid_android_keyboard.c
++++ b/f_hid_android_keyboard.c
+@@ -1,44 +1,44 @@
+-#include <linux/platform_device.h>
+-#include <linux/usb/g_hid.h>
+-
+-/* hid descriptor for a keyboard */
+-static struct hidg_func_descriptor ghid_device_android_keyboard = {
+-	.subclass		= 1, /* Boot Interface Subclass */
+-	.protocol		= 1, /* Keyboard */
+-	.report_length		= 8,
+-	.report_desc_length	= 63,
+-	.report_desc		= {
+-		0x05, 0x01,	/* USAGE_PAGE (Generic Desktop)	          */
+-		0x09, 0x06,	/* USAGE (Keyboard)                       */
+-		0xa1, 0x01,	/* COLLECTION (Application)               */
+-		0x05, 0x07,	/*   USAGE_PAGE (Keyboard)                */
+-		0x19, 0xe0,	/*   USAGE_MINIMUM (Keyboard LeftControl) */
+-		0x29, 0xe7,	/*   USAGE_MAXIMUM (Keyboard Right GUI)   */
+-		0x15, 0x00,	/*   LOGICAL_MINIMUM (0)                  */
+-		0x25, 0x01,	/*   LOGICAL_MAXIMUM (1)                  */
+-		0x75, 0x01,	/*   REPORT_SIZE (1)                      */
+-		0x95, 0x08,	/*   REPORT_COUNT (8)                     */
+-		0x81, 0x02,	/*   INPUT (Data,Var,Abs)                 */
+-		0x95, 0x01,	/*   REPORT_COUNT (1)                     */
+-		0x75, 0x08,	/*   REPORT_SIZE (8)                      */
+-		0x81, 0x03,	/*   INPUT (Cnst,Var,Abs)                 */
+-		0x95, 0x05,	/*   REPORT_COUNT (5)                     */
+-		0x75, 0x01,	/*   REPORT_SIZE (1)                      */
+-		0x05, 0x08,	/*   USAGE_PAGE (LEDs)                    */
+-		0x19, 0x01,	/*   USAGE_MINIMUM (Num Lock)             */
+-		0x29, 0x05,	/*   USAGE_MAXIMUM (Kana)                 */
+-		0x91, 0x02,	/*   OUTPUT (Data,Var,Abs)                */
+-		0x95, 0x01,	/*   REPORT_COUNT (1)                     */
+-		0x75, 0x03,	/*   REPORT_SIZE (3)                      */
+-		0x91, 0x03,	/*   OUTPUT (Cnst,Var,Abs)                */
+-		0x95, 0x06,	/*   REPORT_COUNT (6)                     */
+-		0x75, 0x08,	/*   REPORT_SIZE (8)                      */
+-		0x15, 0x00,	/*   LOGICAL_MINIMUM (0)                  */
+-		0x25, 0x65,	/*   LOGICAL_MAXIMUM (101)                */
+-		0x05, 0x07,	/*   USAGE_PAGE (Keyboard)                */
+-		0x19, 0x00,	/*   USAGE_MINIMUM (Reserved)             */
+-		0x29, 0x65,	/*   USAGE_MAXIMUM (Keyboard Application) */
+-		0x81, 0x00,	/*   INPUT (Data,Ary,Abs)                 */
+-		0xc0		/* END_COLLECTION                         */
+-	}
+-};
+\ No newline at end of file
++#include <linux/platform_device.h>
++#include <linux/usb/g_hid.h>
++
++/* hid descriptor for a keyboard */
++static struct hidg_func_descriptor ghid_device_android_keyboard = {
++	.subclass		= 1, /* Boot Interface Subclass */
++	.protocol		= 1, /* Keyboard */
++	.report_length		= 8,
++	.report_desc_length	= 63,
++	.report_desc		= {
++		0x05, 0x01,	/* USAGE_PAGE (Generic Desktop)	          */
++		0x09, 0x06,	/* USAGE (Keyboard)                       */
++		0xa1, 0x01,	/* COLLECTION (Application)               */
++		0x05, 0x07,	/*   USAGE_PAGE (Keyboard)                */
++		0x19, 0xe0,	/*   USAGE_MINIMUM (Keyboard LeftControl) */
++		0x29, 0xe7,	/*   USAGE_MAXIMUM (Keyboard Right GUI)   */
++		0x15, 0x00,	/*   LOGICAL_MINIMUM (0)                  */
++		0x25, 0x01,	/*   LOGICAL_MAXIMUM (1)                  */
++		0x75, 0x01,	/*   REPORT_SIZE (1)                      */
++		0x95, 0x08,	/*   REPORT_COUNT (8)                     */
++		0x81, 0x02,	/*   INPUT (Data,Var,Abs)                 */
++		0x95, 0x01,	/*   REPORT_COUNT (1)                     */
++		0x75, 0x08,	/*   REPORT_SIZE (8)                      */
++		0x81, 0x03,	/*   INPUT (Cnst,Var,Abs)                 */
++		0x95, 0x05,	/*   REPORT_COUNT (5)                     */
++		0x75, 0x01,	/*   REPORT_SIZE (1)                      */
++		0x05, 0x08,	/*   USAGE_PAGE (LEDs)                    */
++		0x19, 0x01,	/*   USAGE_MINIMUM (Num Lock)             */
++		0x29, 0x05,	/*   USAGE_MAXIMUM (Kana)                 */
++		0x91, 0x02,	/*   OUTPUT (Data,Var,Abs)                */
++		0x95, 0x01,	/*   REPORT_COUNT (1)                     */
++		0x75, 0x03,	/*   REPORT_SIZE (3)                      */
++		0x91, 0x03,	/*   OUTPUT (Cnst,Var,Abs)                */
++		0x95, 0x06,	/*   REPORT_COUNT (6)                     */
++		0x75, 0x08,	/*   REPORT_SIZE (8)                      */
++		0x15, 0x00,	/*   LOGICAL_MINIMUM (0)                  */
++		0x25, 0x65,	/*   LOGICAL_MAXIMUM (101)                */
++		0x05, 0x07,	/*   USAGE_PAGE (Keyboard)                */
++		0x19, 0x00,	/*   USAGE_MINIMUM (Reserved)             */
++		0x29, 0x65,	/*   USAGE_MAXIMUM (Keyboard Application) */
++		0x81, 0x00,	/*   INPUT (Data,Ary,Abs)                 */
++		0xc0		/* END_COLLECTION                         */
++	}
++};
+diff --git a/f_hid_android_mouse.c b/f_hid_android_mouse.c
+index a5cb524..075d125 100644
+--- a/f_hid_android_mouse.c
++++ b/f_hid_android_mouse.c
+@@ -1,39 +1,40 @@
+-#include <linux/platform_device.h>
+-#include <linux/usb/g_hid.h>
+-
+-/* HID descriptor for a mouse */
+-static struct hidg_func_descriptor ghid_device_android_mouse = {
+-	.subclass      = 1, /* Boot Interface Subclass */
+-	.protocol      = 2, /* Mouse */
+-	.report_length = 4,
+-	.report_desc_length	= 52,
+-	.report_desc = {
+-		0x05, 0x01,  //Usage Page(Generic Desktop Controls)
+-		0x09, 0x02,  //Usage (Mouse)
+-		0xa1, 0x01,  //Collection (Application)
+-		0x09, 0x01,  //Usage (pointer)
+-		0xa1, 0x00,  //Collection (Physical)
+-		0x05, 0x09,  //Usage Page (Button)
+-		0x19, 0x01,  //Usage Minimum(1)
+-		0x29, 0x05,  //Usage Maximum(5)
+-		0x15, 0x00,  //Logical Minimum(1)
+-		0x25, 0x01,  //Logical Maximum(1)
+-		0x95, 0x05,  //Report Count(5)
+-		0x75, 0x01,  //Report Size(1)
+-		0x81, 0x02,  //Input(Data,Variable,Absolute,BitField)
+-		0x95, 0x01,  //Report Count(1)
+-		0x75, 0x03,  //Report Size(3)
+-		0x81, 0x01,  //Input(Constant,Array,Absolute,BitField)
+-		0x05, 0x01,  //Usage Page(Generic Desktop Controls)
+-		0x09, 0x30,  //Usage(x)
+-		0x09, 0x31,  //Usage(y)
+-		0x09, 0x38,  //Usage(Wheel)
+-		0x15, 0x81,  //Logical Minimum(-127)
+-		0x25, 0x7F,  //Logical Maximum(127)
+-		0x75, 0x08,  //Report Size(8)
+-		0x95, 0x03,  //Report Count(3)
+-		0x81, 0x06,  //Input(Data,Variable,Relative,BitField)
+-		0xc0,  //End Collection
+-		0xc0  //End Collection
+-	}
+-};
+\ No newline at end of file
++#include <linux/platform_device.h>
++#include <linux/usb/g_hid.h>
++
++/* HID descriptor for a mouse */
++static struct hidg_func_descriptor ghid_device_android_mouse = {
++	.subclass      = 1, /* Boot Interface Subclass */
++	.protocol      = 2, /* Mouse */
++	.report_length = 4,
++	.report_desc_length	= 52,
++	.report_desc = {
++		0x05, 0x01,  //Usage Page(Generic Desktop Controls)
++		0x09, 0x02,  //Usage (Mouse)
++		0xa1, 0x01,  //Collection (Application)
++		0x09, 0x01,  //Usage (pointer)
++		0xa1, 0x00,  //Collection (Physical)
++		0x05, 0x09,  //Usage Page (Button)
++		0x19, 0x01,  //Usage Minimum(1)
++		0x29, 0x05,  //Usage Maximum(5)
++		0x15, 0x00,  //Logical Minimum(1)
++		0x25, 0x01,  //Logical Maximum(1)
++		0x95, 0x05,  //Report Count(5)
++		0x75, 0x01,  //Report Size(1)
++		0x81, 0x02,  //Input(Data,Variable,Absolute,BitField)
++		0x95, 0x01,  //Report Count(1)
++		0x75, 0x03,  //Report Size(3)
++		0x81, 0x01,  //Input(Constant,Array,Absolute,BitField)
++		0x05, 0x01,  //Usage Page(Generic Desktop Controls)
++		0x09, 0x30,  //Usage(x)
++		0x09, 0x31,  //Usage(y)
++		0x09, 0x38,  //Usage(Wheel)
++		0x15, 0x81,  //Logical Minimum(-127)
++		0x25, 0x7F,  //Logical Maximum(127)
++		0x75, 0x08,  //Report Size(8)
++		0x95, 0x03,  //Report Count(3)
++		0x81, 0x06,  //Input(Data,Variable,Relative,BitField)
++		0xc0,  //End Collection
++		0xc0  //End Collection
++	}
++};
++
+
